@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meesho + ProxyBin — Complete API Reference</title>
+<style>
+:root {
+  --bg: #08090d;
+  --card: #0e121a;
+  --border: #1a2233;
+  --text: #cbd5e1;
+  --text2: #94a3b8;
+  --white: #f8fafc;
+  --cyan: #38bdf8;
+  --pink: #d946ef;
+  --purple: #9f2089;
+  --green: #34d399;
+  --blue: #60a5fa;
+  --yellow: #fbbf24;
+  --code-bg: #0d1017;
+  --get: #065f46;
+  --get-text: #34d399;
+  --post: #1e3a8a;
+  --post-text: #60a5fa;
+  --del: #7f1d1d;
+  --del-text: #fca5a5;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.6;padding:32px;}
+.container{max-width:1100px;margin:0 auto;}
+header{border-bottom:2px solid var(--purple);padding-bottom:24px;margin-bottom:40px;}
+header h1{font-size:2rem;color:var(--white);margin-bottom:6px;}
+header h1 span{color:var(--pink);}
+header p{color:var(--text2);font-size:1rem;}
+h2{font-size:1.3rem;color:var(--cyan);border-bottom:1px solid var(--border);padding-bottom:8px;margin:44px 0 16px 0;}
+h3{font-size:1rem;color:var(--white);margin:20px 0 8px 0;}
+p{color:var(--text2);margin-bottom:8px;}
+ul{padding-left:20px;color:var(--text2);margin-bottom:10px;}
+li{margin-bottom:4px;}
+li strong{color:var(--white);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px;}
+.ep-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.badge{display:inline-block;font-family:'SF Mono',Menlo,monospace;font-size:0.75rem;font-weight:700;padding:4px 10px;border-radius:5px;text-transform:uppercase;letter-spacing:.5px;}
+.get{background:var(--get);color:var(--get-text);}
+.post{background:var(--post);color:var(--post-text);}
+.del{background:var(--del);color:var(--del-text);}
+.url{font-family:'SF Mono',Menlo,monospace;font-size:.9rem;color:var(--white);word-break:break-all;}
+.label{font-size:.75rem;font-weight:700;color:var(--pink);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px 0;}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:14px;font-family:'SF Mono',Menlo,monospace;font-size:.82rem;color:#e2e8f0;overflow-x:auto;margin-bottom:10px;white-space:pre-wrap;word-break:break-all;}
+code{font-family:'SF Mono',Menlo,monospace;background:var(--code-bg);color:var(--cyan);padding:2px 6px;border-radius:4px;font-size:.82rem;border:1px solid var(--border);}
+.note{background:rgba(159,32,137,.1);border-left:4px solid var(--purple);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;color:var(--text2);}
+.note strong{color:var(--white);}
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin:10px 0 14px 0;}
+th{background:#11151f;color:var(--text2);text-align:left;padding:8px 10px;border:1px solid var(--border);font-size:.75rem;text-transform:uppercase;letter-spacing:.03em;}
+td{padding:8px 10px;border:1px solid var(--border);color:var(--text2);background:var(--code-bg);}
+td:first-child{color:var(--cyan);font-family:monospace;}
+.country-grid{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.country-pill{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:.8rem;color:var(--text);}
+.section-divider{border:none;border-top:2px solid var(--purple);margin:50px 0;}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Meesho + ProxyBin — <span>Complete API Reference</span></h1>
+  <p>Full network trace documentation for Meesho private API endpoints and ProxyBin rotating proxy layer. Captured via PCAPdroid.</p>
+</header>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- PROXYBIN -->
+<!-- ═══════════════════════════════════════ -->
+
+<h2>⬡ ProxyBin — Rotating Proxy API</h2>
+<p>Base URL: <code>https://proxybin.netlify.app/api/proxy</code></p>
+<p>High-speed HTTP/HTTPS request forwarder through localized rotating IP nodes with sticky session support.</p>
+
+<div class="card">
+  <div class="ep-header">
+    <span class="badge post">POST</span>
+    <span class="url">https://proxybin.netlify.app/api/proxy</span>
+  </div>
+  <div class="label">Use Case</div>
+  <p>Sends a synchronous or streamed HTTP request through an ephemeral rotating proxy IP node.</p>
+  <div class="label">Request Body Fields</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td>url</td><td>string</td><td>✅</td><td>Target destination URL (https only)</td></tr>
+    <tr><td>method</td><td>string</td><td>❌</td><td>HTTP verb: GET POST PUT PATCH DELETE HEAD</td></tr>
+    <tr><td>headers</td><td>object</td><td>❌</td><td>Extra HTTP request headers to forward to target</td></tr>
+    <tr><td>body</td><td>string|object</td><td>❌</td><td>Raw payload body (JSON string, encoded data, or text)</td></tr>
+    <tr><td>bodyIsBase64</td><td>bool</td><td>❌</td><td>Set to true if payload body is base64 encoded</td></tr>
+    <tr><td>proxy_country</td><td>string</td><td>❌</td><td>Exit node country code (default: random geo-rotation)</td></tr>
+    <tr><td>retries</td><td>int</td><td>❌</td><td>Max attempts with fresh IP nodes (max: 8, default: 4)</td></tr>
+    <tr><td>stream</td><td>bool</td><td>❌</td><td>Pipe response live (SSE / long-poll)</td></tr>
+    <tr><td>sticky</td><td>bool</td><td>❌</td><td>Keep same IP across requests; returns direct_url</td></tr>
+    <tr><td>direct_url</td><td>string</td><td>❌</td><td>Reuse dedicated node from previous sticky call</td></tr>
+  </table>
+  <div class="label">Response Schema</div>
+  <pre>{
+  "status": 200,
+  "statusText": "OK",
+  "headers": { "content-type": "application/json" },
+  "data": {},
+  "data_b64": "...",
+  "binary": false,
+  "size": 1234,
+  "proxyCountry": "sg",
+  "attempt": 1,
+  "success": true,
+  "elapsed_ms": 1857,
+  "elapsed_sec": 1.857
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header">
+    <span class="badge get">GET</span>
+    <span class="url">https://proxybin.netlify.app/api/proxy/ip</span>
+  </div>
+  <div class="label">Use Case</div>
+  <p>Inspects the active egress IP and user agent of the current rotating node.</p>
+  <div class="label">Response</div>
+  <pre>{
+  "ok": true,
+  "proxy_country": "sg",
+  "ip": "195.3.220.147",
+  "user_agent": "Mozilla/5.0 ...",
+  "note": "Egress IP of rotating node"
+}</pre>
+</div>
+
+<h3>Geo-Location Routing — Available Country Codes</h3>
+<div class="country-grid">
+  <span class="country-pill">🇺🇸 us — United States</span>
+  <span class="country-pill">🇵🇱 pl — Poland</span>
+  <span class="country-pill">🇸🇬 sg — Singapore</span>
+  <span class="country-pill">🇩🇪 de — Germany</span>
+  <span class="country-pill">🇫🇷 fr — France</span>
+  <span class="country-pill">🇳🇱 nl — Netherlands</span>
+  <span class="country-pill">🇬🇧 gb — Great Britain</span>
+  <span class="country-pill">🇨🇦 ca — Canada</span>
+</div>
+<div class="note"><strong>APAC Tip:</strong> Use <code>proxy_country: "sg"</code> for lowest latency to Meesho's Indian servers. Set <code>retries: 1</code> to avoid retry cascade overhead.</div>
+
+<h3>ProxyBin — Example: Sticky Session Workflow</h3>
+<pre># Step 1: Initialize sticky session node
+RESP=$(curl -s -X POST https://proxybin.netlify.app/api/proxy \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://target.com/login",
+    "method": "POST",
+    "sticky": true
+  }')
+DIRECT=$(echo $RESP | jq -r '.direct_url')
+
+# Step 2: Reuse same node
+curl -s -X POST https://proxybin.netlify.app/api/proxy \
+  -H "Content-Type: application/json" \
+  -d "{\"url\": \"https://target.com/dashboard\", \"method\": \"GET\", \"direct_url\": \"$DIRECT\"}"</pre>
+
+<hr class="section-divider">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MEESHO -->
+<!-- ═══════════════════════════════════════ -->
+
+<h2>⬡ Meesho Private API — Global Headers</h2>
+<p>Every request to <code>prod.meeshoapi.com</code> requires these headers:</p>
+
+<div class="card">
+<pre>authorization: 32c4d8137cn9eb493a1921f203173080
+meesho-user-context: anonymous  (or "logged_in" after auth)
+application-id: com.meesho.supplz
+app-version: 29.3
+app-version-code: 864
+app-client-id: android
+app-sdk-version: 36
+country-iso: in
+instance-id: [UUIDv4 without hyphens]
+app-session-id: [UUIDv4 with hyphens]
+app-user-id: [Integer user ID — post login]
+u-token: [Base64 encoded phone param — post login]
+app-user-location: [Base64 JSON: {lat, long, city, pincode}]
+shield-session-id: [UUID anti-fraud token]
+xo: [Composite Base64 JWT Token]
+Content-Type: application/json; charset=UTF-8
+Accept-Encoding: gzip
+User-Agent: okhttp/4.9.0</pre>
+  <div class="note"><strong>xo header:</strong> Composite JWT bundling anonymous_user_id (or registered user_id), instance_id, and expiration timestamps. Refreshed on every Meesho login response as <code>xoox.xo</code>.</div>
+</div>
+
+<!-- AUTH -->
+<h2>1. Authentication & Login Flow</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://user-auth.otpless.app/v2/state</span></div>
+  <div class="label">Use Case</div><p>Initializes an OTPLess authentication transaction state session.</p>
+  <div class="label">Response</div>
+  <pre>{ "state": "4aa0c3cb-a47f-4811-a319-156d74626d7c" }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://user-auth.otpless.app/v3/lp/user/transaction/intent/{state}</span></div>
+  <div class="label">Use Case</div><p>Submits mobile number to trigger OTP delivery via SMS.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "selectedCountryCode": "91",
+  "mobile": "918999112489",
+  "silentAuthEnabled": true,
+  "hasWhatsapp": "true",
+  "appId": "XN07RN1IQC548C9YK5I4",
+  "platform": "HEADLESS"
+}</pre>
+  <div class="label">Response</div>
+  <pre>{
+  "quantumLeap": {
+    "otpLength": 6,
+    "state": "4aa0c3cb-a47f-4811-a319-156d74626d7c",
+    "channelAuthToken": "588820ea39554907a32e3ed30a3f0d15",
+    "uid": "831D5D727FD84EC29468B9CE835F5DF3",
+    "channel": "OTP"
+  }
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://user-auth.otpless.app/v3/lp/user/transaction/otp/{state}</span></div>
+  <div class="label">Use Case</div><p>Verifies the 6-digit OTP entered by the user.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "selectedCountryCode": "91",
+  "mobile": "918999112489",
+  "otp": "612009",
+  "value": "918999112489",
+  "token": "588820ea39554907a32e3ed30a3f0d15",
+  "appId": "XN07RN1IQC548C9YK5I4",
+  "platform": "HEADLESS"
+}</pre>
+  <div class="label">Response</div>
+  <pre>{
+  "authDetail": {
+    "status": "SUCCESS",
+    "token": "588820ea39554907a32e3ed30a3f0d15",
+    "user": { "mobile": "918999112489", "uid": "831D5D727FD84EC29468B9CE835F5DF3" }
+  }
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/2.0/user/login</span></div>
+  <div class="label">Use Case</div><p>Exchanges verified OTPLess token for an authenticated Meesho user session.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "login_type": "otpless",
+  "otpless": {
+    "token": "5db91879657f4dc7956c4b6fbf0bec5c",
+    "id_token": "[Encrypted ID Token]",
+    "aes_key_encrypted": "[Encrypted AES Key]",
+    "version": "v2"
+  },
+  "ga_id": "f40156a7-d83f-a87b-51af-568a5ccf9e87"
+}</pre>
+  <div class="label">Response</div>
+  <pre>{
+  "user": {
+    "user_id": 129610903,
+    "phone": "+918999112489",
+    "new": false,
+    "sign_up_date": "2021-11-29 22:52:56 +0530 IST"
+  },
+  "xoox": { "xo": "[New Authenticated User Composite JWT]" }
+}</pre>
+</div>
+
+<!-- FOD -->
+<h2>2. First Order Discount (FOD) Personalization</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/anonymous/fod-personalisation</span></div>
+  <div class="label">Use Case</div><p>Fetches FOD eligibility, discount bucket value, and promotional assets. Fires anonymously — no login required.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "offer_bucket": "",
+  "from_language_modal": false,
+  "brand": "Xiaomi",
+  "model": "Xiaomi Pad 7 Pro",
+  "os": "Android",
+  "screen_width": 1080,
+  "screen_height": 2199
+}</pre>
+  <div class="label">Response</div>
+  <pre>{
+  "surgical_first_order_discount_v3": {
+    "enabled": true,
+    "offer_bucket": 75,
+    "offer": {
+      "offer_title": "Upto",
+      "offer_text": "₹75 OFF",
+      "offer_subtitle": "on 1st order",
+      "max_offer_value": 75
+    }
+  }
+}</pre>
+  <div class="note"><strong>FOD Hunting:</strong> Fire 50-60 parallel anonymous requests each with fresh <code>instance-id</code> + <code>app-session-id</code> UUIDs via ProxyBin. Collect all <code>offer_bucket</code> values, pick the maximum, then proceed to login with that anonymous session.</div>
+</div>
+
+<!-- REFERRAL -->
+<h2>3. Referral & Acquisition Tracking</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/anonymous/referral-app-install</span></div>
+  <div class="label">Use Case</div><p>Registers the app installation triggered via a referral or share link.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "install_link": "supply://open?af_deeplink=true&campaign=refferal_acquaint&from=account_section&media_source=WhatsApp&shortlink=r99th0qd&via=2560ev",
+  "via": "2560ev"
+}</pre>
+  <div class="label">Response</div>
+  <pre>{ "success": true }</pre>
+</div>
+
+<!-- CONFIG -->
+<h2>4. Client Configuration & Feature Flags</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/2.0/configs/user</span></div>
+  <div class="label">Use Case</div><p>Fetches user-specific feature flags, experiment variants, checkout config, and user profile location parameters.</p>
+  <div class="label">Extra Request Headers</div>
+  <pre>calling-source: App Launch
+send-scaled-conf: false
+app-session-count: 3</pre>
+  <div class="label">Response</div>
+  <pre>{
+  "checkout": {
+    "enable_bank_offers_v2": true,
+    "instant_checkout": { "instant_checkout": true, "pre_selected_address": true },
+    "payment_page_reordering": { "order": ["COD", "JUSPAY", "MEESHO_BNPL"] },
+    "upi_plugin": { "enabled": true }
+  },
+  "platform": {
+    "user_level": "one_plus_order_user",
+    "user_profile": { "city": "Darwha", "pincode": "445202" }
+  }
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/2.0/configs/application</span></div>
+  <div class="label">Use Case</div><p>Fetches global screen banners, entry-point links, and service configuration assets.</p>
+</div>
+
+<!-- DISCOVERY -->
+<h2>5. Home Feed, Discovery & Navigation</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/anonymous/home-page/fetch</span></div>
+  <div class="label">Use Case</div><p>Fetches primary homepage product feed, hero banners, and widget groups.</p>
+  <div class="label">Response Highlights</div>
+  <pre>{
+  "catalogFeedType": "for_you",
+  "catalogs": [
+    { "id": 129286208, "hero_pid": 434200566, "name": "Magic De-Tan Face wash...", "min_catalog_price": 167, "prepaid_price": 157 }
+  ]
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/4.0/anonymous/for-you?l=20</span></div>
+  <div class="label">Use Case</div><p>Retrieves personalized "For You" item feed and dynamic filters.</p>
+  <div class="label">Response Highlights</div>
+  <pre>{ "count": 10000, "count_string": "1000+", "dynamic_filters": [...] }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/2.0/anonymous/catalogs/sort-filter</span></div>
+  <div class="label">Use Case</div><p>Fetches category navigation bars and filtering metadata.</p>
+  <div class="label">Request Body</div>
+  <pre>{ "type": "for_you", "selected_filters": [], "selectedFilterIds": [] }</pre>
+  <div class="label">Response Highlights</div>
+  <pre>{ "top_nav_bar": { "id": 55, "title": "North_Male_CatBar6", "tiles": [...] } }</pre>
+</div>
+
+<!-- SEARCH -->
+<h2>6. Search — Autocomplete, Landing & Results</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/3.0/search/suggest</span></div>
+  <div class="label">Use Case</div><p>Real-time autocomplete suggestions as user types. Alternative: <code>/api/2.0/search/suggest</code></p>
+  <div class="label">Query Parameters</div>
+  <pre>query=wat&limit=10</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/1.0/search/landing-page</span></div>
+  <div class="label">Use Case</div><p>Triggered when user taps search bar before typing. Returns recent search history, trending pills, and visual category suggestions.</p>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/3.0/catalogs?request_type=search</span></div>
+  <div class="label">Use Case</div><p>Full-text product search results execution.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "query": "facewash",
+  "offset": 0,
+  "limit": 20,
+  "sort": "relevance",
+  "filters": {},
+  "user_id": 129610903
+}</pre>
+</div>
+
+<!-- PDP -->
+<h2>7. Product Detail Page (PDP)</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/3.0/product/static</span></div>
+  <div class="label">Use Case</div><p>Retrieves static catalog attributes: title, descriptions, image galleries, variations/sizes, specifications. Alternative: <code>/api/2.0/product</code></p>
+  <div class="label">Query Parameters</div>
+  <pre>product_id=468339857&catalog_id=145195173</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/3.0/product/dynamic</span></div>
+  <div class="label">Use Case</div><p>User and location-specific data: current pricing, inventory, delivery SLA, deal timers, prepaid discounts, return unbundling.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "product_id": 468339857,
+  "catalog_id": 145195173,
+  "pincode": "445202",
+  "user_id": 129610903
+}</pre>
+  <div class="label">Key Response Fields</div>
+  <pre>serving_price, inventory_count, estimated_delivery_date, return_options, offers_applied</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/2.0/catalogs/{catalog_id}/reviews-with-media</span></div>
+  <div class="label">Use Case</div><p>Fetches customer ratings, written reviews, and user-uploaded verification photos.</p>
+  <div class="label">Query Parameters</div><pre>offset=0&limit=20</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/2.0/catalogs/{catalog_id}/reviews</span></div>
+  <div class="label">Use Case</div><p>Standard text reviews without media.</p>
+  <div class="label">Query Parameters</div><pre>offset=0&limit=20</pre>
+</div>
+
+<!-- ACCOUNT -->
+<h2>8. Account & User Profile</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/1.0/user-profile</span></div>
+  <div class="label">Use Case</div><p>Retrieves registered user profile: name, email, phone.</p>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/v1/user/meesho/balance?includes=balance_info</span></div>
+  <div class="label">Use Case</div><p>Fetches user wallet balance, credits, and refund info.</p>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://gateway-prod.mppl.meesho.com/api/v1/lending/user/app/home?screen=ACCOUNT&pill_identifier=BNPL</span></div>
+  <div class="label">Use Case</div><p>Fetches Pay Later / BNPL eligibility and credit limit status.</p>
+</div>
+
+<!-- WISHLIST -->
+<h2>9. Wishlist</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/2.0/collections/wishlist</span></div>
+  <div class="label">Query Parameters</div><pre>in_stock=true&context=cart&offset=0&limit=20</pre>
+  <div class="label">Use Case</div><p>Retrieves in-stock wishlist items with real-time pricing and delivery estimates.</p>
+  <div class="label">Response Highlights</div>
+  <pre>{
+  "feed_name": "wishlist_products",
+  "products": [
+    { "product": { "id": 1083120973, "name": "Portable USB Humidifier...", "suppliers": [{ "price": 178, "original_price": 215 }] } }
+  ]
+}</pre>
+</div>
+
+<!-- ADDRESSES -->
+<h2>10. Address Book & Geolocation</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/3.0/addresses</span></div>
+  <div class="label">Query Parameters</div><pre>offset=0&limit=50&check_pin=true&context=cart&cart_identifier=default</pre>
+  <div class="label">Use Case</div><p>Retrieves all saved delivery addresses, validating courier serviceability per address.</p>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/2.0/addresses</span></div>
+  <div class="label">Use Case</div><p>Creates and commits a new shipping address.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "name": "shw",
+  "mobile": "8999112489",
+  "pin": "445202",
+  "city": "darwha",
+  "state": "Maharashtra",
+  "address_line_1": "Flat / House No",
+  "address_line_2": "Street / Locality",
+  "address_type": "Home",
+  "country_id": 1,
+  "id": 0,
+  "user_id": 129610903
+}</pre>
+  <div class="label">Response Highlights</div>
+  <pre>{ "address": { "id": 764908522, "pin_serviceable": true, "estimated_delivery_date": "2026-09-29T02:09:07" } }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/user/delivery-location</span></div>
+  <div class="label">Use Case</div><p>Resolves city and state from 6-digit pincode.</p>
+  <div class="label">Request Body</div>
+  <pre>{ "pincode": "445202", "context": "address_add_edit", "user_id": 129610903 }</pre>
+  <div class="label">Response</div>
+  <pre>{ "user_delivery_location": { "city": "Darwha", "lat": "20.3102", "long": "77.7726", "pincode": "445202" } }</pre>
+</div>
+
+<!-- CART -->
+<h2>11. Cart Management</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/1.0/cart/minview</span></div>
+  <div class="label">Use Case</div><p>Fetches active cart summary and items for the authenticated user.</p>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/cart/add</span></div>
+  <div class="label">Use Case</div><p>Adds a product variation to cart. Returns cart_session token used in all subsequent checkout calls.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "product_id": 468339857,
+  "catalog_id": 145195173,
+  "variation_id": 167,
+  "quantity": 1,
+  "price_type_id": "basic_return_price",
+  "source": "PDP",
+  "cart_identifier": "default",
+  "user_id": 129610903
+}</pre>
+  <div class="label">price_type_id values</div>
+  <ul><li><strong>basic_return_price</strong> — Only Wrong/Defect item returns</li><li><strong>premium_return_price</strong> — All issue easy returns</li></ul>
+  <div class="label">Response</div>
+  <pre>{
+  "success": true,
+  "cart_session": "1jF+bjuzsuLKbPu2JWaRvjaEBwl66IJ5...",
+  "total_items": 1,
+  "item_id": 9350403681,
+  "message": "Product added to cart successfully"
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/8.0/cart</span></div>
+  <div class="label">Use Case</div><p>Calculates dynamic prices, active promotions, supplier discounts, and return option unbundling across checkout.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "context": "atc_payment_summary",
+  "identifier": "default",
+  "cart_session": "1jF+bjuzsuLKbPu2JWaRvjaEBwl66IJ5...",
+  "dest_pin": null,
+  "address_id": null,
+  "payment_modes": [],
+  "user_id": 129610903
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/cart/location</span></div>
+  <div class="label">Use Case</div><p>Updates cart totals, verifies shipping costs, refreshes delivery estimates when address is selected.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "context": "address_bottom_sheet_summary",
+  "identifier": "default",
+  "cart_session": "...",
+  "dest_pin": "445202",
+  "address_id": 764908522,
+  "user_id": 129610903
+}</pre>
+</div>
+
+<!-- PAYMENTS -->
+<h2>12. Payment Methods & Financial Services</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/v1/wallet/list</span></div>
+  <div class="label">Use Case</div><p>Queries available user credit, refunds, and Meesho Balance applicable toward cart total.</p>
+  <div class="label">Request Body</div><pre>{ "user_id": 129610903 }</pre>
+  <div class="label">Response Highlights</div>
+  <pre>{ "result": { "effective_total": 205, "price_break_up": [{ "type": "PRODUCT_PRICE", "value": 270 }, { "type": "DISCOUNT", "value": -65 }] } }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/v1/list/payment-options</span></div>
+  <div class="label">Use Case</div><p>Discovers eligible payment options: UPI apps, Net Banking, Wallets, Juspay processors.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "payment_identifier": "checkout",
+  "checkout_identifier": "default",
+  "cart_session": "",
+  "available_upi_apps": [
+    { "package_name": "com.google.android.apps.nbu.paisa.user", "app_name": "GPay" },
+    { "package_name": "com.phonepe.app", "app_name": "PhonePe" }
+  ],
+  "skip_bnpl_eligibility": true,
+  "user_id": 129610903
+}</pre>
+  <div class="label">Response Highlights</div>
+  <pre>{
+  "client_auth_token": "tkn_d79e86acbe1c411b8b1053e3e260b441",
+  "payment_options": [{ "name": "UPI", "type": "UPI" }, { "name": "Wallet", "type": "WALLET" }, { "name": "Debit/Credit Cards", "type": "CARD" }]
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/payments/user-details</span></div>
+  <div class="label">Use Case</div><p>Binds selected payment mode to order session, applies balances, emits final payable price.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "actions": ["updateOrder"],
+  "identifier": "default",
+  "is_headless_enabled": true,
+  "cart_session": "...",
+  "user_id": 129610903
+}</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/v3/offers/list</span></div>
+  <div class="label">Use Case</div><p>Checks bank-level and card-level promotional offers.</p>
+  <div class="label">Request Body</div>
+  <pre>{ "customer": { "id": "129610903", "phone": "+918999112489" }, "merchant_key_id": "9970", "order": { "amount": "0", "currency": "INR" }, "context": "PAYMENT", "include_all_offers": true, "user_id": 129610903 }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/v1/bnpl/eligibility</span></div>
+  <div class="label">Use Case</div><p>Evaluates Pay Later credit line eligibility.</p>
+  <div class="label">Request Body</div>
+  <pre>{ "amount": 0, "ip_address": "100.106.52.65", "carrier_name": "airtel", "device_manufacturer": "samsung", "device_model": "SM-G990B2", "user_id": 129610903 }</pre>
+</div>
+
+<!-- ORDER PLACEMENT -->
+<h2>13. Order Placement Pipeline</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/4.0/preorders</span></div>
+  <div class="label">Use Case</div><p>Pre-order checkout validation. Validates session, locks inventory, issues master order reference ID.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "payment_method_type": "MEESHO_BALANCE",
+  "identifier": "default",
+  "payment_aggregator": null,
+  "is_selling_to_customer": false,
+  "cart_session": "...",
+  "address_id": 764908522,
+  "customer_amount": 205,
+  "payment_method": "MEESHO_BALANCE",
+  "enable_price_unbundling": true,
+  "user_id": 129610903
+}</pre>
+  <div class="label">Response</div>
+  <pre>{ "success": true, "order_num": "334796292394147456" }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/3.0/order</span></div>
+  <div class="label">Use Case</div><p>Commits the order transaction, executes wallet deduction or sets COD flags, creates sub-orders.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "pre_order_id": -1,
+  "is_selling_to_customer": false,
+  "order_num": "334796292394147456",
+  "cart_session": "...",
+  "user_id": 129610903
+}</pre>
+  <div class="label">Response Highlights</div>
+  <pre>{
+  "order_num": "334796292394147456",
+  "order_status": "ordered",
+  "orders": [{ "order_num": "334796292394147456", "order_details": [{ "sub_order_num": "334796292394147456_1", "product_id": 468339857, "name": "POND'S Bright Miracle...", "price": 205.0 }] }]
+}</pre>
+</div>
+
+<!-- ORDERS -->
+<h2>14. Order History, Tracking & Details</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/3.0/user/orders</span></div>
+  <div class="label">Use Case</div><p>Retrieves order history with filters across all statuses.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "limit": 10,
+  "cursor": null,
+  "query": null,
+  "filters": { "sub_order_status": [0], "sub_order_created": null },
+  "user_id": 129610903
+}</pre>
+  <div class="label">sub_order_status values</div>
+  <ul><li><strong>0</strong> — All</li><li><strong>Ordered, Shipped, Delivered, Cancelled, Exchange, Return</strong></li></ul>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/3.0/user/order-details</span></div>
+  <div class="label">Use Case</div><p>Fetches real-time milestone delivery tracking, cancellation availability, invoice details, and pricing summaries.</p>
+  <div class="label">Request Body</div>
+  <pre>{ "order_num": "334796292394147456", "sub_order_num": "334796292394147456_1", "user_id": 129610903 }</pre>
+  <div class="label">Response Highlights</div>
+  <pre>{
+  "order_status": "STATUS_ID_ORDERED",
+  "tracking_details": {
+    "timeline": {
+      "milestones": [
+        { "status": "Ordered", "date": "25 Sep", "active": true },
+        { "status": "Shipped", "date": "25 Sep", "active": false },
+        { "status": "Out for Delivery", "date": "01 Oct", "active": false },
+        { "status": "Delivery", "date": "01 Oct", "active": false }
+      ]
+    }
+  },
+  "user_action_info": { "primary_cta": { "display_name": "Cancel Order", "action": "SUB_ORDER_CANCELLATION" } }
+}</pre>
+</div>
+
+<!-- CANCELLATION -->
+<h2>15. Order Cancellation</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/1.0/orders/cancellation-reasons</span></div>
+  <div class="label">Use Case</div><p>Retrieves active reason codes for cancellation sheet. Alternative: <code>/api/2.0/orders/cancellation-reasons</code></p>
+  <div class="label">Known Reason IDs</div>
+  <ul>
+    <li><strong>22</strong> — Want to change payment method</li>
+    <li><strong>62</strong> — Ordered by mistake / incorrect address</li>
+    <li><strong>15</strong> — Delayed delivery / unexpected dispatch delay</li>
+  </ul>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/2.0/orders/{order_num}/sub-orders/{sub_order_num}/cancellations</span></div>
+  <div class="label">Use Case</div><p>Triggers immediate cancellation of an unshipped item.</p>
+  <div class="label">Content-Type</div><pre>application/x-www-form-urlencoded</pre>
+  <div class="label">Request Payload</div><pre>reason_id=22&comments=</pre>
+  <div class="label">Response</div><pre>[{}]  (HTTP 200 OK)</pre>
+</div>
+
+<!-- RETURNS -->
+<h2>16. Returns & Exchanges (Post-Delivery)</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge get">GET</span><span class="url">https://prod.meeshoapi.com/api/2.0/user/orders/{sub_order_num}/return-exchange-reasons</span></div>
+  <div class="label">Use Case</div><p>Checks return/exchange eligibility within 7-day window and fetches reason taxonomy. Alternative: <code>/api/1.0/orders/returns/reasons?sub_order_id={id}</code></p>
+  <div class="label">Response Attributes</div>
+  <ul>
+    <li><strong>exchange_available</strong> — Boolean</li>
+    <li><strong>return_available</strong> — Boolean</li>
+    <li><strong>is_exchange_only</strong> — Boolean (refund blocked)</li>
+    <li><strong>reasons</strong> — Hierarchy: Size/Fit, Quality defect, Wrong product</li>
+    <li><strong>media_upload_required</strong> — Boolean</li>
+  </ul>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/3.0/image/upload</span></div>
+  <div class="label">Use Case</div><p>Uploads defect proof photos/videos before submitting return.</p>
+  <div class="label">Content-Type</div><pre>multipart/form-data</pre>
+  <div class="label">Form Data</div>
+  <pre>file: [Binary image data]
+source: return_exchange</pre>
+  <div class="label">Response</div><pre>{ "image_url": "https://images.meesho.com/..." }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/user/orders/return-exchange</span></div>
+  <div class="label">Use Case</div><p>Commits reverse-pickup request and initiates refund or exchange replacement. Set <code>request_type: "EXCHANGE"</code> and populate <code>target_variation_id</code> for exchanges.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "order_num": "334796292394147456",
+  "sub_order_num": "334796292394147456_1",
+  "request_type": "RETURN",
+  "reason_id": 101,
+  "sub_reason_id": 1012,
+  "comments": "Item size is smaller than expected",
+  "media_urls": ["https://images.meesho.com/images/returns/example_proof.jpg"],
+  "exchange_details": { "target_variation_id": null },
+  "pickup_address_id": 764908522,
+  "refund_mode": "MEESHO_BALANCE",
+  "user_id": 129610903
+}</pre>
+  <div class="label">Response</div>
+  <pre>{ "success": true, "return_id": 88491024, "pickup_date": "2026-10-03", "refund_status": "INITIATED_TO_MEESHO_BALANCE" }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/user/orders/reverse-tracking</span></div>
+  <div class="label">Use Case</div><p>Fetches reverse logistics milestones for returned item.</p>
+  <div class="label">Request Body</div><pre>{ "sub_order_num": "334796292394147456_1", "user_id": 129610903 }</pre>
+  <div class="label">Milestones</div>
+  <ul>
+    <li>Pickup Scheduled → Out for Pickup → Item Picked Up → Refund Credited</li>
+  </ul>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<h2>17. Product Recommendations</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://prod.meeshoapi.com/api/1.0/catalogs/recommendations?feed_context=odp_ordered</span></div>
+  <div class="label">Use Case</div><p>Personalized product recommendations based on recently ordered item.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "catalog_id": 145195173,
+  "product_id": 468339857,
+  "sub_sub_category_id": 5499,
+  "origin": "odp_recommendations",
+  "offset": 0,
+  "limit": 20,
+  "user_id": 129610903
+}</pre>
+</div>
+
+<!-- FRAUD -->
+<h2>18. Fraud & Device Telemetry (Shield SDK)</h2>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://pro-in-app-device.csftr.com/device/v2/mobile</span></div>
+  <div class="label">Use Case</div><p>Collects device fingerprint for anti-fraud risk scoring. Hardware serials, memory, battery, installed packages, hook/cloner detection.</p>
+  <div class="label">Response</div>
+  <pre>{ "code": "001", "status": true, "result": { "device_intelligence": { "app_tampering": false, "debugging": false, "device_score": 0, "is_jailbroken": false } } }</pre>
+</div>
+
+<div class="card">
+  <div class="ep-header"><span class="badge post">POST</span><span class="url">https://pro-in-app-device.csftr.com/device/v2/api/attributes</span></div>
+  <div class="label">Use Case</div><p>Synchronizes real-time screen transition markers with risk evaluation engine.</p>
+  <div class="label">Request Body</div>
+  <pre>{
+  "test": false,
+  "screen_name": "place_order",
+  "user_id": "129610903",
+  "site_id": "a1867c50ea8b9a56d84f021bf6e786157b5d5933",
+  "session_id": "7f982114abed4828a0e019aea3f86b7c"
+}</pre>
+</div>
+
+</div>
+</body>
+</html>
